@@ -1,0 +1,1996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Quiz Builder</title>
+
+<style>
+
+/* ================= GENERAL ================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #222;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+}
+
+.hidden {
+    display: none !important;
+}
+
+
+/* ================= AUTH ================= */
+
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.auth-box {
+    width: 400px;
+    background: white;
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+}
+
+.logo {
+    text-align: center;
+    color: #667eea;
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #777;
+    margin-bottom: 25px;
+}
+
+.input-group {
+    margin-bottom: 18px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: bold;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.primary-btn {
+    width: 100%;
+    padding: 13px;
+    background: #667eea;
+    color: white;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.primary-btn:hover {
+    background: #5568d8;
+}
+
+.switch-text {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+}
+
+.switch-text span {
+    color: #667eea;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.error {
+    color: #e74c3c;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.success {
+    color: #27ae60;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+
+/* ================= APP ================= */
+
+#app {
+    min-height: 100vh;
+    background: #f5f6fa;
+}
+
+.navbar {
+    background: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.navbar h2 {
+    color: #667eea;
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.username-display {
+    font-weight: bold;
+}
+
+.logout-btn {
+    background: #ff4757;
+    color: white;
+    padding: 9px 16px;
+    border-radius: 7px;
+}
+
+.main-content {
+    max-width: 1000px;
+    margin: auto;
+    padding: 30px 20px;
+}
+
+
+/* ================= DASHBOARD ================= */
+
+.welcome {
+    margin-bottom: 25px;
+}
+
+.welcome h1 {
+    margin-bottom: 8px;
+}
+
+.welcome p {
+    color: #777;
+}
+
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.dashboard-card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.dashboard-card h3 {
+    color: #667eea;
+    font-size: 30px;
+    margin-bottom: 5px;
+}
+
+.quiz-start-card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.quiz-start-card h2 {
+    margin-bottom: 10px;
+}
+
+.quiz-start-card p {
+    color: #777;
+    margin-bottom: 20px;
+}
+
+.start-btn {
+    background: #667eea;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+
+/* ================= QUIZ ================= */
+
+.quiz-container {
+    max-width: 850px;
+    margin: auto;
+}
+
+.quiz-header {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.timer {
+    background: #ff4757;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.progress-container {
+    height: 8px;
+    background: #ddd;
+    border-radius: 10px;
+    margin-bottom: 25px;
+}
+
+.progress {
+    height: 100%;
+    width: 0%;
+    background: #667eea;
+    border-radius: 10px;
+}
+
+.question-card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.question-number {
+    color: #667eea;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.question {
+    font-size: 23px;
+    margin-bottom: 25px;
+}
+
+.options {
+    display: grid;
+    gap: 15px;
+}
+
+.option {
+    padding: 16px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.option:hover {
+    border-color: #667eea;
+    background: #f1f2ff;
+}
+
+.option.selected {
+    border-color: #667eea;
+    background: #e8eaff;
+}
+
+.quiz-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+}
+
+.prev-btn {
+    background: #ddd;
+    padding: 12px 25px;
+    border-radius: 8px;
+}
+
+.next-btn,
+.submit-btn {
+    background: #667eea;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+}
+
+
+/* ================= RESULT ================= */
+
+.result-card {
+    max-width: 700px;
+    margin: auto;
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.result-card h1 {
+    color: #667eea;
+    margin-bottom: 20px;
+}
+
+.score {
+    font-size: 60px;
+    font-weight: bold;
+    margin: 20px;
+}
+
+.result-message {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.result-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.stat {
+    background: #f5f6fa;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.stat h2 {
+    color: #667eea;
+}
+
+.dashboard-btn {
+    background: #667eea;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+}
+
+
+/* ================= HISTORY ================= */
+
+.history {
+    margin-top: 30px;
+}
+
+.history h2 {
+    margin-bottom: 15px;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.history-table th,
+.history-table td {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+.history-table th {
+    background: #667eea;
+    color: white;
+}
+
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:700px) {
+
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .result-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .navbar {
+        padding: 15px;
+    }
+
+    .navbar h2 {
+        font-size: 20px;
+    }
+
+    .username-display {
+        display: none;
+    }
+
+    .question {
+        font-size: 19px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+                    SIGN UP PAGE
+===================================================== -->
+
+<div id="signupPage" class="auth-container">
+
+    <div class="auth-box">
+
+        <h1 class="logo">Quiz Builder</h1>
+
+        <p class="subtitle">
+            Create your account
+        </p>
+
+        <div id="signupError" class="error"></div>
+
+        <div class="input-group">
+
+            <label>Username</label>
+
+            <input
+                type="text"
+                id="signupUsername"
+                placeholder="Enter username">
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>Email</label>
+
+            <input
+                type="email"
+                id="signupEmail"
+                placeholder="Enter email">
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>Password</label>
+
+            <input
+                type="password"
+                id="signupPassword"
+                placeholder="Enter password">
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>Confirm Password</label>
+
+            <input
+                type="password"
+                id="signupConfirmPassword"
+                placeholder="Confirm password">
+
+        </div>
+
+
+        <button
+            class="primary-btn"
+            onclick="signup()">
+
+            Sign Up
+
+        </button>
+
+
+        <p class="switch-text">
+
+            Already have an account?
+
+            <span onclick="showLogin()">
+                Login
+            </span>
+
+        </p>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+                    LOGIN PAGE
+===================================================== -->
+
+<div id="loginPage" class="auth-container hidden">
+
+    <div class="auth-box">
+
+        <h1 class="logo">
+            Quiz Builder
+        </h1>
+
+        <p class="subtitle">
+            Login to continue
+        </p>
+
+        <div id="loginError" class="error"></div>
+
+        <div class="input-group">
+
+            <label>
+                Username or Email
+            </label>
+
+            <input
+                type="text"
+                id="loginUsername"
+                placeholder="Username or email">
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Password
+            </label>
+
+            <input
+                type="password"
+                id="loginPassword"
+                placeholder="Password">
+
+        </div>
+
+
+        <button
+            class="primary-btn"
+            onclick="login()">
+
+            Login
+
+        </button>
+
+
+        <p class="switch-text">
+
+            Don't have an account?
+
+            <span onclick="showSignup()">
+                Sign Up
+            </span>
+
+        </p>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+                    MAIN APPLICATION
+===================================================== -->
+
+<div id="app" class="hidden">
+
+
+    <!-- NAVBAR -->
+
+    <nav class="navbar">
+
+        <h2>
+            Quiz Builder
+        </h2>
+
+        <div class="nav-right">
+
+            <span
+                id="usernameDisplay"
+                class="username-display">
+            </span>
+
+            <button
+                class="logout-btn"
+                onclick="logout()">
+
+                Logout
+
+            </button>
+
+        </div>
+
+    </nav>
+
+
+
+    <!-- =================================================
+                        DASHBOARD
+    ================================================= -->
+
+    <div id="dashboard" class="main-content">
+
+        <div class="welcome">
+
+            <h1>
+                Welcome,
+                <span id="welcomeUsername"></span>!
+            </h1>
+
+            <p>
+                Test your knowledge with our interactive quiz.
+            </p>
+
+        </div>
+
+
+        <div class="dashboard-cards">
+
+            <div class="dashboard-card">
+
+                <h3>15</h3>
+
+                <p>
+                    Questions
+                </p>
+
+            </div>
+
+
+            <div class="dashboard-card">
+
+                <h3>10</h3>
+
+                <p>
+                    Minutes
+                </p>
+
+            </div>
+
+
+            <div class="dashboard-card">
+
+                <h3 id="attemptCount">
+                    0
+                </h3>
+
+                <p>
+                    Attempts
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="quiz-start-card">
+
+            <h2>
+                General Knowledge Quiz
+            </h2>
+
+            <p>
+                15 questions • 10 minutes • Multiple Choice
+            </p>
+
+            <button
+                class="start-btn"
+                onclick="startQuiz()">
+
+                Start Quiz
+
+            </button>
+
+        </div>
+
+
+        <!-- RESULT HISTORY -->
+
+        <div class="history">
+
+            <h2>
+                Previous Results
+            </h2>
+
+            <table class="history-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Attempt
+                        </th>
+
+                        <th>
+                            Score
+                        </th>
+
+                        <th>
+                            Percentage
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="historyBody">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+                        QUIZ PAGE
+    ================================================= -->
+
+    <div
+        id="quizPage"
+        class="main-content hidden">
+
+        <div class="quiz-container">
+
+            <div class="quiz-header">
+
+                <h2>
+                    General Knowledge
+                </h2>
+
+                <div class="timer">
+
+                    Time:
+                    <span id="time">
+                        10:00
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="progress-container">
+
+                <div
+                    id="progress"
+                    class="progress">
+                </div>
+
+            </div>
+
+
+            <div class="question-card">
+
+                <div
+                    id="questionNumber"
+                    class="question-number">
+
+                    Question 1 of 15
+
+                </div>
+
+
+                <div
+                    id="question"
+                    class="question">
+
+                </div>
+
+
+                <div
+                    id="options"
+                    class="options">
+
+                </div>
+
+
+                <div class="quiz-buttons">
+
+                    <button
+                        id="prevBtn"
+                        class="prev-btn"
+                        onclick="previousQuestion()">
+
+                        Previous
+
+                    </button>
+
+
+                    <button
+                        id="nextBtn"
+                        class="next-btn"
+                        onclick="nextQuestion()">
+
+                        Next
+
+                    </button>
+
+
+                    <button
+                        id="submitBtn"
+                        class="submit-btn hidden"
+                        onclick="submitQuiz()">
+
+                        Submit Quiz
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+                        RESULT PAGE
+    ================================================= -->
+
+    <div
+        id="resultPage"
+        class="main-content hidden">
+
+        <div class="result-card">
+
+            <h1>
+                Quiz Completed!
+            </h1>
+
+
+            <div class="score">
+
+                <span id="finalScore">
+                    0
+                </span>
+                /15
+
+            </div>
+
+
+            <div
+                id="resultMessage"
+                class="result-message">
+
+            </div>
+
+
+            <div class="result-stats">
+
+                <div class="stat">
+
+                    <h2 id="correctAnswers">
+                        0
+                    </h2>
+
+                    <p>
+                        Correct
+                    </p>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <h2 id="wrongAnswers">
+                        0
+                    </h2>
+
+                    <p>
+                        Wrong
+                    </p>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <h2 id="percentage">
+                        0%
+                    </h2>
+
+                    <p>
+                        Percentage
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <button
+                class="dashboard-btn"
+                onclick="showDashboard()">
+
+                Back to Dashboard
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+
+/* =====================================================
+                    QUESTIONS
+===================================================== */
+
+const questions = [
+
+    {
+        question: "Which language is mainly used to structure a web page?",
+        options: [
+            "CSS",
+            "HTML",
+            "JavaScript",
+            "Python"
+        ],
+        answer: 1
+    },
+
+    {
+        question: "Which language is used to style web pages?",
+        options: [
+            "HTML",
+            "Java",
+            "CSS",
+            "C++"
+        ],
+        answer: 2
+    },
+
+    {
+        question: "Which language makes web pages interactive?",
+        options: [
+            "JavaScript",
+            "HTML",
+            "CSS",
+            "SQL"
+        ],
+        answer: 0
+    },
+
+    {
+        question: "What does CPU stand for?",
+        options: [
+            "Central Processing Unit",
+            "Computer Personal Unit",
+            "Central Program Utility",
+            "Control Processing User"
+        ],
+        answer: 0
+    },
+
+    {
+        question: "Which data structure follows FIFO?",
+        options: [
+            "Stack",
+            "Queue",
+            "Tree",
+            "Graph"
+        ],
+        answer: 1
+    },
+
+    {
+        question: "Which data structure follows LIFO?",
+        options: [
+            "Queue",
+            "Array",
+            "Stack",
+            "Linked List"
+        ],
+        answer: 2
+    },
+
+    {
+        question: "Which keyword is used to create a class in Java?",
+        options: [
+            "object",
+            "class",
+            "struct",
+            "define"
+        ],
+        answer: 1
+    },
+
+    {
+        question: "Which symbol is used for a single-line comment in Java?",
+        options: [
+            "#",
+            "//",
+            "<!-- -->",
+            "/* */"
+        ],
+        answer: 1
+    },
+
+    {
+        question: "What is the capital of India?",
+        options: [
+            "Mumbai",
+            "Chennai",
+            "New Delhi",
+            "Kolkata"
+        ],
+        answer: 2
+    },
+
+    {
+        question: "How many bits are there in one byte?",
+        options: [
+            "4",
+            "8",
+            "16",
+            "32"
+        ],
+        answer: 1
+    },
+
+    {
+        question: "Which one is an operating system?",
+        options: [
+            "Google",
+            "Windows",
+            "HTML",
+            "Java"
+        ],
+        answer: 1
+    },
+
+    {
+        question: "Which company originally developed Java?",
+        options: [
+            "Microsoft",
+            "Apple",
+            "Sun Microsystems",
+            "Google"
+        ],
+        answer: 2
+    },
+
+    {
+        question: "Which HTML tag is used to create a hyperlink?",
+        options: [
+            "<p>",
+            "<a>",
+            "<h1>",
+            "<img>"
+        ],
+        answer: 1
+    },
+
+    {
+        question: "Which method is commonly used to print output in Java?",
+        options: [
+            "System.out.println()",
+            "print.console()",
+            "console.write()",
+            "System.printText()"
+        ],
+        answer: 0
+    },
+
+    {
+        question: "Which of the following is a database management system?",
+        options: [
+            "MySQL",
+            "HTML",
+            "CSS",
+            "JavaScript"
+        ],
+        answer: 0
+    }
+
+];
+
+
+/* =====================================================
+                    GLOBAL VARIABLES
+===================================================== */
+
+let currentUser = null;
+
+let currentQuestion = 0;
+
+let userAnswers =
+    new Array(questions.length).fill(null);
+
+let timeLeft = 600;
+
+let timerInterval;
+
+
+/* =====================================================
+                    PAGE FUNCTIONS
+===================================================== */
+
+function showLogin() {
+
+    document
+        .getElementById("signupPage")
+        .classList.add("hidden");
+
+    document
+        .getElementById("loginPage")
+        .classList.remove("hidden");
+
+}
+
+
+function showSignup() {
+
+    document
+        .getElementById("loginPage")
+        .classList.add("hidden");
+
+    document
+        .getElementById("signupPage")
+        .classList.remove("hidden");
+
+}
+
+
+/* =====================================================
+                    SIGN UP
+===================================================== */
+
+function signup() {
+
+    const username =
+        document.getElementById("signupUsername").value.trim();
+
+    const email =
+        document.getElementById("signupEmail").value.trim();
+
+    const password =
+        document.getElementById("signupPassword").value;
+
+    const confirmPassword =
+        document.getElementById("signupConfirmPassword").value;
+
+    const error =
+        document.getElementById("signupError");
+
+
+    error.textContent = "";
+
+
+    if (!username || !email || !password || !confirmPassword) {
+
+        error.textContent =
+            "Please fill all fields.";
+
+        return;
+    }
+
+
+    if (password !== confirmPassword) {
+
+        error.textContent =
+            "Passwords do not match.";
+
+        return;
+    }
+
+
+    let users =
+        JSON.parse(localStorage.getItem("quizUsers")) || [];
+
+
+    const existingUser =
+        users.find(
+            user =>
+            user.username === username ||
+            user.email === email
+        );
+
+
+    if (existingUser) {
+
+        error.textContent =
+            "Username or email already exists.";
+
+        return;
+    }
+
+
+    const newUser = {
+
+        username: username,
+
+        email: email,
+
+        password: password
+
+    };
+
+
+    users.push(newUser);
+
+
+    localStorage.setItem(
+        "quizUsers",
+        JSON.stringify(users)
+    );
+
+
+    alert(
+        "Account created successfully!"
+    );
+
+
+    showLogin();
+
+}
+
+
+/* =====================================================
+                    LOGIN
+===================================================== */
+
+function login() {
+
+    const loginValue =
+        document
+            .getElementById("loginUsername")
+            .value
+            .trim();
+
+    const password =
+        document
+            .getElementById("loginPassword")
+            .value;
+
+
+    const error =
+        document.getElementById("loginError");
+
+
+    let users =
+        JSON.parse(
+            localStorage.getItem("quizUsers")
+        ) || [];
+
+
+    const user =
+        users.find(
+            u =>
+            (u.username === loginValue ||
+             u.email === loginValue)
+            &&
+            u.password === password
+        );
+
+
+    if (!user) {
+
+        error.textContent =
+            "Invalid username/email or password.";
+
+        return;
+    }
+
+
+    currentUser = user;
+
+
+    localStorage.setItem(
+        "loggedInUser",
+        JSON.stringify(user)
+    );
+
+
+    error.textContent = "";
+
+
+    showApp();
+
+}
+
+
+/* =====================================================
+                    SHOW APPLICATION
+===================================================== */
+
+function showApp() {
+
+    document
+        .getElementById("signupPage")
+        .classList.add("hidden");
+
+    document
+        .getElementById("loginPage")
+        .classList.add("hidden");
+
+    document
+        .getElementById("app")
+        .classList.remove("hidden");
+
+
+    document
+        .getElementById("usernameDisplay")
+        .textContent =
+        currentUser.username;
+
+
+    document
+        .getElementById("welcomeUsername")
+        .textContent =
+        currentUser.username;
+
+
+    showDashboard();
+
+}
+
+
+/* =====================================================
+                    DASHBOARD
+===================================================== */
+
+function showDashboard() {
+
+    clearInterval(timerInterval);
+
+
+    document
+        .getElementById("dashboard")
+        .classList.remove("hidden");
+
+    document
+        .getElementById("quizPage")
+        .classList.add("hidden");
+
+    document
+        .getElementById("resultPage")
+        .classList.add("hidden");
+
+
+    loadHistory();
+
+}
+
+
+/* =====================================================
+                    START QUIZ
+===================================================== */
+
+function startQuiz() {
+
+    currentQuestion = 0;
+
+    userAnswers =
+        new Array(questions.length).fill(null);
+
+    timeLeft = 600;
+
+
+    document
+        .getElementById("dashboard")
+        .classList.add("hidden");
+
+    document
+        .getElementById("resultPage")
+        .classList.add("hidden");
+
+    document
+        .getElementById("quizPage")
+        .classList.remove("hidden");
+
+
+    showQuestion();
+
+
+    clearInterval(timerInterval);
+
+    timerInterval =
+        setInterval(updateTimer, 1000);
+
+}
+
+
+/* =====================================================
+                    TIMER
+===================================================== */
+
+function updateTimer() {
+
+    let minutes =
+        Math.floor(timeLeft / 60);
+
+    let seconds =
+        timeLeft % 60;
+
+
+    document
+        .getElementById("time")
+        .textContent =
+        String(minutes).padStart(2, "0")
+        +
+        ":"
+        +
+        String(seconds).padStart(2, "0");
+
+
+    if (timeLeft <= 0) {
+
+        clearInterval(timerInterval);
+
+        submitQuiz();
+
+        return;
+    }
+
+
+    timeLeft--;
+
+}
+
+
+/* =====================================================
+                    SHOW QUESTION
+===================================================== */
+
+function showQuestion() {
+
+    const q =
+        questions[currentQuestion];
+
+
+    document
+        .getElementById("questionNumber")
+        .textContent =
+        `Question ${currentQuestion + 1} of ${questions.length}`;
+
+
+    document
+        .getElementById("question")
+        .textContent =
+        q.question;
+
+
+    const optionsContainer =
+        document.getElementById("options");
+
+
+    optionsContainer.innerHTML = "";
+
+
+    q.options.forEach(
+        (option, index) => {
+
+            const div =
+                document.createElement("div");
+
+
+            div.className = "option";
+
+
+            if (
+                userAnswers[currentQuestion]
+                === index
+            ) {
+
+                div.classList.add("selected");
+
+            }
+
+
+            div.innerHTML = `
+                <input
+                    type="radio"
+                    name="answer"
+                    ${userAnswers[currentQuestion] === index
+                    ? "checked"
+                    : ""}>
+                ${option}
+            `;
+
+
+            div.onclick = function() {
+
+                userAnswers[currentQuestion] =
+                    index;
+
+
+                document
+                    .querySelectorAll(".option")
+                    .forEach(
+                        opt =>
+                        opt.classList
+                        .remove("selected")
+                    );
+
+
+                div.classList.add("selected");
+
+
+                div.querySelector("input")
+                    .checked = true;
+
+            };
+
+
+            optionsContainer.appendChild(div);
+
+        }
+    );
+
+
+    updateQuizButtons();
+
+    updateProgress();
+
+}
+
+
+/* =====================================================
+                    BUTTONS
+===================================================== */
+
+function updateQuizButtons() {
+
+    const prev =
+        document.getElementById("prevBtn");
+
+    const next =
+        document.getElementById("nextBtn");
+
+    const submit =
+        document.getElementById("submitBtn");
+
+
+    prev.disabled =
+        currentQuestion === 0;
+
+
+    if (
+        currentQuestion
+        === questions.length - 1
+    ) {
+
+        next.classList.add("hidden");
+
+        submit.classList.remove("hidden");
+
+    } else {
+
+        next.classList.remove("hidden");
+
+        submit.classList.add("hidden");
+
+    }
+
+}
+
+
+/* =====================================================
+                    PROGRESS
+===================================================== */
+
+function updateProgress() {
+
+    const percentage =
+        ((currentQuestion + 1)
+        / questions.length)
+        * 100;
+
+
+    document
+        .getElementById("progress")
+        .style.width =
+        percentage + "%";
+
+}
+
+
+/* =====================================================
+                    NEXT
+===================================================== */
+
+function nextQuestion() {
+
+    if (
+        currentQuestion
+        <
+        questions.length - 1
+    ) {
+
+        currentQuestion++;
+
+        showQuestion();
+
+    }
+
+}
+
+
+/* =====================================================
+                    PREVIOUS
+===================================================== */
+
+function previousQuestion() {
+
+    if (currentQuestion > 0) {
+
+        currentQuestion--;
+
+        showQuestion();
+
+    }
+
+}
+
+
+/* =====================================================
+                    SUBMIT QUIZ
+===================================================== */
+
+function submitQuiz() {
+
+    clearInterval(timerInterval);
+
+
+    let score = 0;
+
+
+    userAnswers.forEach(
+        (answer, index) => {
+
+            if (
+                answer ===
+                questions[index].answer
+            ) {
+
+                score++;
+
+            }
+
+        }
+    );
+
+
+    const wrong =
+        questions.length - score;
+
+
+    const percentage =
+        Math.round(
+            (score / questions.length)
+            * 100
+        );
+
+
+    saveResult(
+        score,
+        percentage
+    );
+
+
+    document
+        .getElementById("quizPage")
+        .classList.add("hidden");
+
+
+    document
+        .getElementById("resultPage")
+        .classList.remove("hidden");
+
+
+    document
+        .getElementById("finalScore")
+        .textContent =
+        score;
+
+
+    document
+        .getElementById("correctAnswers")
+        .textContent =
+        score;
+
+
+    document
+        .getElementById("wrongAnswers")
+        .textContent =
+        wrong;
+
+
+    document
+        .getElementById("percentage")
+        .textContent =
+        percentage + "%";
+
+
+    let message;
+
+
+    if (percentage >= 80) {
+
+        message =
+            "Excellent! Great performance.";
+
+    }
+
+    else if (percentage >= 60) {
+
+        message =
+            "Good job! Keep practicing.";
+
+    }
+
+    else if (percentage >= 40) {
+
+        message =
+            "Not bad. You can improve.";
+
+    }
+
+    else {
+
+        message =
+            "Keep learning and try again.";
+
+    }
+
+
+    document
+        .getElementById("resultMessage")
+        .textContent =
+        message;
+
+}
+
+
+/* =====================================================
+                    SAVE RESULT
+===================================================== */
+
+function saveResult(score, percentage) {
+
+    const key =
+        "quizResults_" +
+        currentUser.username;
+
+
+    let results =
+        JSON.parse(
+            localStorage.getItem(key)
+        ) || [];
+
+
+    results.push({
+
+        score: score,
+
+        total: questions.length,
+
+        percentage: percentage,
+
+        date: new Date()
+            .toLocaleString()
+
+    });
+
+
+    localStorage.setItem(
+        key,
+        JSON.stringify(results)
+    );
+
+}
+
+
+/* =====================================================
+                    LOAD HISTORY
+===================================================== */
+
+function loadHistory() {
+
+    const key =
+        "quizResults_" +
+        currentUser.username;
+
+
+    let results =
+        JSON.parse(
+            localStorage.getItem(key)
+        ) || [];
+
+
+    document
+        .getElementById("attemptCount")
+        .textContent =
+        results.length;
+
+
+    const body =
+        document.getElementById("historyBody");
+
+
+    body.innerHTML = "";
+
+
+    if (results.length === 0) {
+
+        body.innerHTML = `
+            <tr>
+                <td colspan="3">
+                    No quiz attempts yet.
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    results.forEach(
+        (result, index) => {
+
+            body.innerHTML += `
+
+                <tr>
+
+                    <td>
+                        Attempt ${index + 1}
+                    </td>
+
+                    <td>
+                        ${result.score}/${result.total}
+                    </td>
+
+                    <td>
+                        ${result.percentage}%
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+                    LOGOUT
+===================================================== */
+
+function logout() {
+
+    clearInterval(timerInterval);
+
+
+    currentUser = null;
+
+
+    localStorage.removeItem(
+        "loggedInUser"
+    );
+
+
+    document
+        .getElementById("app")
+        .classList.add("hidden");
+
+
+    showLogin();
+
+}
+
+
+/* =====================================================
+                SHOW DASHBOARD
+===================================================== */
+
+function showDashboard() {
+
+    clearInterval(timerInterval);
+
+
+    document
+        .getElementById("dashboard")
+        .classList.remove("hidden");
+
+
+    document
+        .getElementById("quizPage")
+        .classList.add("hidden");
+
+
+    document
+        .getElementById("resultPage")
+        .classList.add("hidden");
+
+
+    loadHistory();
+
+}
+
+
+/* =====================================================
+                AUTO LOGIN CHECK
+===================================================== */
+
+window.onload = function() {
+
+    const savedUser =
+        localStorage.getItem(
+            "loggedInUser"
+        );
+
+
+    if (savedUser) {
+
+        currentUser =
+            JSON.parse(savedUser);
+
+        showApp();
+
+    }
+
+};
+
+</script>
+
+</body>
+</html>
